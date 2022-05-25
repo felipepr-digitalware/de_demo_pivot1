@@ -1,7 +1,14 @@
 import { NgModule, Component, ViewChild, enableProdMode } from "@angular/core";
 import { BrowserModule } from "@angular/platform-browser";
 import { platformBrowserDynamic } from "@angular/platform-browser-dynamic";
-import { DxPivotGridModule } from "devextreme-angular";
+import {
+  DxDataGridComponent,
+  DxDataGridModule,
+  DxPivotGridModule,
+  DxPopupModule,
+  DxTemplateModule
+} from "devextreme-angular";
+import PivotGridDataSource from "devextreme/ui/pivot_grid/data_source";
 import { Service, Sale } from "./app.service";
 
 @Component({
@@ -11,12 +18,20 @@ import { Service, Sale } from "./app.service";
   providers: [Service]
 })
 export class AppComponent {
+  @ViewChild("drillDownDataGrid") drillDownDataGrid: DxDataGridComponent;
+
   sales: Sale[];
 
   dataSource: any;
 
+  drillDownDataSource: any;
+
+  salesPopupVisible = false;
+
+  salesPopupTitle = "";
+
   constructor(service: Service) {
-    this.dataSource = {
+    this.dataSource = new PivotGridDataSource({
       fields: [
         {
           caption: "Region",
@@ -41,12 +56,13 @@ export class AppComponent {
         },
         {
           groupName: "Date",
-          groupInterval: "day",
-          groupIndex: 0
+          groupIndex: 0,
+          selector: function (data) {
+            return new Date(data.date).toLocaleDateString("es-CO");
+          }
         },
         {
           groupName: "Date",
-          groupInterval: "month",
           groupIndex: 1,
           format: "HH:mm",
           selector: function (data) {
@@ -62,20 +78,39 @@ export class AppComponent {
         }
       ],
       store: service.getSales()
-    };
+    });
   }
 
   citySelector(data) {
     return `${data.city}`;
   }
 
-  paipillaSelector(data) {
-    return "Hoola";
+  onPivotCellClick(e) {
+    if (e.area == "data") {
+      const rowPathLength = e.cell.rowPath.length;
+      const rowPathName = e.cell.rowPath[rowPathLength - 1];
+
+      this.drillDownDataSource = this.dataSource.createDrillDownDataSource(
+        e.cell
+      );
+      this.salesPopupTitle = `${rowPathName || "Total"} Drill Down Data`;
+      this.salesPopupVisible = true;
+    }
+  }
+
+  onPopupShown() {
+    this.drillDownDataGrid.instance.updateDimensions();
   }
 }
 
 @NgModule({
-  imports: [BrowserModule, DxPivotGridModule],
+  imports: [
+    DxPivotGridModule,
+    BrowserModule,
+    DxTemplateModule,
+    DxPopupModule,
+    DxDataGridModule
+  ],
   declarations: [AppComponent],
   bootstrap: [AppComponent]
 })

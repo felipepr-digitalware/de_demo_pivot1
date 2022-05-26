@@ -96,6 +96,10 @@ export class AppComponent {
       this.salesPopupTitle = `${rowPathName || "Total"} Drill Down Data`;
       this.salesPopupVisible = true;
     }
+
+    if (e.area == "row" && e.cellElement.className === "dx-last-cell") {
+      console.log(e.cell.text);
+    }
   }
 
   onPopupShown() {

@@ -63,7 +63,7 @@ const sales: Sale[] = [
     date: "2022-05-24T04:00:00.000Z"
   },
   {
-    id: 6,
+    id: 7,
     region: "01 Ingreso",
     country: "",
     city: "Amoxicilina",
@@ -71,7 +71,7 @@ const sales: Sale[] = [
     date: "2022-05-24T06:00:00.000Z"
   },
   {
-    id: 6,
+    id: 8,
     region: "01 Ingreso",
     country: "",
     city: "Amoxicilina",
@@ -79,7 +79,7 @@ const sales: Sale[] = [
     date: "2022-05-24T08:00:00.000Z"
   },
   {
-    id: 7,
+    id: 9,
     region: "02 Egreso",
     country: "",
     city: "Sonda Vertical",
@@ -87,7 +87,7 @@ const sales: Sale[] = [
     date: "2022-05-24T17:00:00.000Z"
   },
   {
-    id: 7,
+    id: 10,
     region: "02 Egreso",
     country: "",
     city: "Sonda Vertical",
